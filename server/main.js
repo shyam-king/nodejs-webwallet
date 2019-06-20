@@ -60,13 +60,11 @@ app.post("/createacc", function(req,res){
                         } 
                         else {
                             res.status(201).send({message: "Account created successfully!"});
-                            console.log(result);
                         }
                     });
                 }
                 else {
                     res.status(409).send({message: "The username already exists!"});
-                    console.log(result);
                 }
             }
         });
@@ -96,7 +94,42 @@ app.post("/login", (req,res)=>{
                 }
                 else {
                     //generate token and send it back
-                    res.status(200).send({status:1, message:"Login successful!", token:1});
+                    //delete outdated tokens
+                    q = "DELETE FROM authentication_tokens WHERE expiry < NOW();";
+                    sqlConnection.query(q, (err)=>{
+                        if (err) {
+                            res.status(500).send({status:0, message:"Internal server error! Please try again later."});
+                            throw err;
+                        }
+                    });
+
+                    //check if token exists otherwise create one
+                    q = "SELECT * FROM authentication_tokens WHERE username=\"" + username + "\";";
+                    sqlConnection.query(q, (err,result)=>{
+                        if (err) {
+                            res.status(500).send({status:0, message:"Internal server error! Please try again later."});
+                            throw err;
+                        }
+                        else {
+                            if (result.length > 0) {
+                                token = true;
+                                res.status(200).send({status:1, message:"Login successfull!", token:result[0].token});
+                            }
+                            else {
+                                q = "INSERT INTO authentication_tokens(username, expiry) VALUES (\"" + username + "\", DATE_ADD(NOW(), INTERVAL 1 DAY));" ;
+                                sqlConnection.query(q, (err,result)=>{
+                                    if (err) {
+                                        res.status(500).send({status:0, message:"Internal server error! Please try again later."});
+                                        throw err;
+                                    }
+                                    else {
+                                        console.log(result);
+                                        res.status(200).send({status:1, message:"Login successful!", token:result.insertId});
+                                    }
+                                });
+                            }
+                        }
+                    }); 
                 }
             }
         }) ;
