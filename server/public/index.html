@@ -11,8 +11,41 @@
     <body>
         <div class="content">
             <div class="col-1">
-                <h1>Wallet</h1>
+                <div class="card" style="width:100%;"><h1>Wallet</h1></div>
+                <p>This is a wallet management app made with NodeJS. Make sure cookies are turned on. This service does not work without cookies.</p>
+            </div>
+            <div class="col-2">
+                <div class="card">
+                    <h2>Login</h2>
+                        <label>Username: </label>
+                        <input type="text" name="username" id="login_username"/>
+                        <br>
+                        <label>Password: </label>
+                        <input type="password" name="password" id="login_password"/>
+                        <br>
+                        <button id="login_submit">Log In</button><br>
+
+                        <ul id="login_errors"></ul>
+                        <p id="login_message"></p>
+                </div>
+            </div>
+            <div class="col-2">
+                    <div class="card">
+                        <h2>Create an account</h2>
+                            <label>Username: </label>
+                            <input type="text" name="username" id="create_username"/>
+                            <br>
+                            <label>Password: </label>
+                            <input type="password" name="password" id="create_password"/>
+                            <br>
+                            <button id='create_submit'>Create</button><br>
+                            <ul id="create_errors"></ul>
+                            <p id="create_message"></p>
+                    </div>
             </div>
         </div>
+
+        <script src="res/scripts/Cookies.js"></script>
+        <script src="res/scripts/index.js"></script>
     </body>
 </html>

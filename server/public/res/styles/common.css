@@ -218,16 +218,30 @@ div.card {
     margin: 8px;
 }
 
-.content input[type="text"] {
+.content input {
     background: none;
+    color: white;
+    border-color: white;
+    border: 1px;
+    border-style: solid;
+    padding: 4px;
+    margin: 4px;
+}
+
+.content input[type="text"] {
     font-family: "Roboto";
     font-weight: 300;
     padding: 4px;
-    color: white;
-    margin: 0 4px;
-    border: 1px;
-    border-color: white;
-    border-style: solid;
+    margin: 4px;
+}
+
+.content input[type="submit"]{
+    transition-duration: 0.5s;
+    text-transform: uppercase;
+}
+
+.content input[type="submit"]:hover {
+    background-color: #424242
 }
 
 .content [class*="col-"] {
@@ -261,4 +275,13 @@ div.card {
 
 .content i {
     font-style: italic;
+}
+
+.content ul {
+    font-weight: 100;
+}
+
+.content ul li {
+    margin: 2px, 4px;
+    list-style-type: circle;
 }
