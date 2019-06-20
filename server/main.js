@@ -29,6 +29,44 @@ app.get("/", function(req, res){
     res.sendFile(path.join(__dirname, "public/index.html"));
 }); 
 
+app.post("/getdata", (req,res)=>{
+    let q;
+    q = "SELECT users.username,balance FROM authentication_tokens,users WHERE token=" + req.body.token+ " AND users.username = authentication_tokens.username;";
+    let ret = {};
+    sqlConnection.query(q, (err,result) => {
+        if (err) {
+            res.status(500).send({status:0, message:"Internal server error!"});
+            throw err;
+        }
+        else {
+            console.log(result);
+            ret.status = 1;
+            ret.username = result[0].username;
+            ret.balance = result[0].balance;
+            ret.expenses = [];
+            q = "SELECT * FROM expenses WHERE username=\"" + ret.username + "\";";
+            sqlConnection.query(q, (err, result) => {
+                if (err) {
+                    res.status(500).send({status:0, message:"Internal server error!"});
+                    throw err;
+                }
+                else {
+                    result.forEach((value) => {
+                        ret.expenses.push({
+                            title: value.title,
+                            description: value.description,
+                            amount: value.amount,
+                            timestamp: value.timestamp
+                        });
+                    });
+
+                    res.status(200).send(ret);
+                }
+            });
+        }
+    });
+});
+
 app.post("/createacc", function(req,res){
     if (checkSafePassword(req.body.password).length == 0 && checkSafeUsername(req.body.username).length == 0) {
         let q = "SELECT * FROM users WHERE username = \"" + req.body.username + "\";";

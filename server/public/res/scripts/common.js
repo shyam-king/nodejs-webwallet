@@ -21,7 +21,6 @@ class Cookie {
 
     static getCookie(name) {
         var x = document.cookie;
-        console.log(x);
         let cookiePosition = x.indexOf(name);
         if (cookiePosition < 0) {
             return null;

@@ -44,7 +44,6 @@ function login() {
                 //login success
                 let d = new Date();
                 d.setTime( d.getTime() + 12*60*60*1000);
-                console.log(response);
                 let c = new Cookie("token", response.token, d.toUTCString());
                 Cookie.setCookie(c);
                 window.location = "dashboard.html";

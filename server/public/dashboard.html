@@ -8,8 +8,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <div class="col-1" >
-            <h1>Dashboard</h1>
+        <div class="content">
+            <div class="col-1" >
+                <h1>Dashboard</h1>
+                <h3 id="userinfo">Username: Balance: Rs 0.00</h3>
+                <h4>Expenses: </h4>
+                <table id="expenses_table">
+                    <tr>
+                        <th>Time stamp</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                </table>
+                <p id="errormsg"></p>
+            </div>
         </div>
 
         <script src="res/scripts/common.js"></script>
