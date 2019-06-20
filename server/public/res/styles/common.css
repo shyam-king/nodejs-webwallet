@@ -1,0 +1,264 @@
+* {
+    box-sizing: border-box;
+}
+
+h1, p {
+    font-family: 'Roboto';
+}
+
+h1 {
+    font-size: 40px;
+    font-weight: 500;
+    padding: 32px 0;
+    text-align: center;
+}
+
+h2 {
+    font-size: 32px;
+    font-weight: 400;
+    padding: 32px 0;
+    text-align: center;
+}
+
+h3 {
+    font-size: 28px;
+    font-weight: 400;
+    padding: 32px 0;
+    text-align: center;
+}
+
+h4 {
+    font-size: 24px;
+    font-weight: 400;
+    padding: 32px 0;
+    text-align: left;
+}
+
+p {
+    font-size: 22px;
+    font-weight: 300;
+    padding-bottom: 16px;
+    line-height: 120%;
+}
+
+body {
+    text-align: center;
+    background-color: black;
+}
+
+.content table th{
+    font-style: oblique;
+}
+
+div.header {
+    margin: 0 auto 16px auto;
+    padding-top: 16px;
+    width: 100%;
+    background-color: rgba(100,100,100,0.10);
+}
+
+div.header h1 {
+    color: white;
+    text-transform: uppercase;
+}
+
+div.header p {
+    color:white;
+}
+
+div.header table {
+    width:100%;
+    border: 1px;
+    border-color: white;
+    border-style: solid;
+}
+
+div.header table th {
+    transition-duration: 0.5s;
+    padding: 16px 8px;
+}
+
+div.header table th:hover {
+    background-color: #424242;
+}
+
+div.navbar {
+    margin: 8px auto 8px auto;
+    font-family: 'Roboto';
+    font-weight: 400;
+    text-transform: capitalize;
+    font-size: 24px;
+    padding: 16px;
+}
+
+div.navbar a {
+    text-decoration: none;
+    color: white;
+}
+
+div.content {
+    margin: 0 auto;
+    width: 80%;
+    font-family: 'Roboto';
+}
+
+.content {
+    color:white;
+    text-align: left;
+}
+
+.content table {
+    margin: 0 auto;
+    border: 1px;
+    border-style: solid;
+    border-color: white;
+    padding: 8px;
+}
+
+.content table th {
+    padding: 8px 16px;
+    text-align: center;
+    font-weight: 400;
+    background-color: rgba(197, 194, 194, 0.5);
+    border: 1px;
+    border-style: solid;
+    border-color: white;
+    font-style: normal;
+}
+
+.content table td {
+    padding: 8px 16px;
+    text-align: center;
+    font-weight: 300;
+    border: 1px;
+    border-style: solid;
+    border-color: white;
+    background-color: rgba(197, 194, 194, 0.25);
+    color: white;
+}
+
+.content p {
+    text-align: left;
+}
+
+.content button {
+    background:none;
+    transition-duration: 0.5s;
+    font-family: 'Roboto';
+    font-weight: 300;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    color:white;
+    font-size: 20px;
+    border: 1px;
+    border-style: solid;
+    margin: 8px;
+    text-decoration: none;
+}
+
+.content button:hover {
+    background-color: #424242
+}
+
+#conversation_content {
+    padding-left: 48px;
+}
+
+div.card {
+    border: 1px;
+    border-style: solid;
+    width:90%;
+    margin: 8px auto;
+    text-align: center;
+    padding: 16px;
+}
+
+.content div.radioButton {
+    width: max-content;
+    display: inline-block;
+    margin: 8px 16px;
+    cursor: pointer;
+}
+
+.content div.radioButton span {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px;
+    border-color: white;
+    border-style: solid;
+    margin-right: 8px;
+    cursor: inherit;
+}
+
+.content div.radioButton[data-checked="false"]:hover span {
+    background-color: rgba(100,100,100,0.25);
+}
+
+.content div.radioButton[data-checked="true"] span {
+    background-color: rgba(0, 100, 0, 0.75);
+}
+
+.content div.radioButton label {
+    font-family: inherit;
+    font-size: 22px;
+    font-weight: 300;
+    cursor: inherit;
+}
+
+.content div.gameContainer {
+    text-align: center;
+}
+
+.content canvas {
+    border: 1px;
+    border-style: solid;
+    border-color: white;
+    margin: 8px;
+}
+
+.content input[type="text"] {
+    background: none;
+    font-family: "Roboto";
+    font-weight: 300;
+    padding: 4px;
+    color: white;
+    margin: 0 4px;
+    border: 1px;
+    border-color: white;
+    border-style: solid;
+}
+
+.content [class*="col-"] {
+    float: left;
+    padding:4px;
+}
+
+.content .col-1 {
+    width: 100%;
+}
+
+.content .col-2 {
+    width: 50%;
+}
+
+.content .col-3 {
+    width: 33.33%;
+}
+
+@media only screen and (max-width: 1200px) {
+    .content .col-3 {
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .content [class*="col-"] {
+        width: 100%;
+    }
+}
+
+.content i {
+    font-style: italic;
+}

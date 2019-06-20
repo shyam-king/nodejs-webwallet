@@ -1,0 +1,23 @@
+{
+  "name": "webwallet",
+  "version": "1.0.0",
+  "description": "A webwallet made with nodejs",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shyam-king/nodejs-webwallet.git"
+  },
+  "author": "shyam-king",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shyam-king/nodejs-webwallet/issues"
+  },
+  "homepage": "https://github.com/shyam-king/nodejs-webwallet#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql": "^2.17.1"
+  }
+}
