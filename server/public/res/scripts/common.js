@@ -1,3 +1,17 @@
+function tokenValidity(token, callback) {
+    let tokenRequest = new XMLHttpRequest();
+    tokenRequest.addEventListener("load", ev => {
+        if (tokenRequest.response.status == 1 && tokenRequest.response.verified == true) {
+            callback(true);
+        }
+        else callback(false);
+    });
+    tokenRequest.open("POST", "verifytoken");
+    tokenRequest.responseType = "json";
+    tokenRequest.setRequestHeader("Content-Type", "application/json");
+    tokenRequest.send(JSON.stringify({token: token}));
+}
+
 class Cookie {
     constructor(name, value, expiry) {
         this.name = name;

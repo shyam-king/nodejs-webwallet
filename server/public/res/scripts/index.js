@@ -114,6 +114,8 @@ function createAccount() {
     }
 }
 
-function tokenValidity(token) {
-    
-}
+var token_c = Cookie.getCookie("token");
+tokenValidity(token_c.value, function(verified){
+    if (verified == true)
+        window.location = "dashboard.html";
+});

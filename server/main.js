@@ -10,7 +10,8 @@ app.use(express.urlencoded({extended: true}));
 var sqlConnection = mysql.createConnection({
     host:"localhost",
     user:"spider",
-    password:"spider"
+    password:"spider",
+    database:"spiderInductions"
 });
 
 sqlConnection.connect(function(err) {
@@ -20,14 +21,6 @@ sqlConnection.connect(function(err) {
     else {
         console.log("sql: connection successful");
     }
-
-    sqlConnection.query("use spiderInductions;", function(err, result) {
-        if (err) 
-            throw err;
-        else {
-            console.log("sql: using database spiderInductions.");
-        }
-    });
 });
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -137,6 +130,34 @@ app.post("/login", (req,res)=>{
     else {
         res.status(401).send({status: 0, message: "Invalid credentials."});
     }
+});
+
+app.post("/verifytoken", (req,res)=>{
+    let token = req.body.token;
+    let q = "SELECT * FROM authentication_tokens WHERE token=" + token + ";";
+    let clear = "DELETE FROM authentication_tokens WHERE expiry < NOW();";
+    sqlConnection.query(clear, (err)=>{
+        if (err) {
+            res.status(500).send({verified: false, status: 0, message: "Internal server error! Please try again later."});
+            throw err;
+        }
+        else {
+            sqlConnection.query(q, (err, result)=>{
+                if (err) {
+                    res.status(500).send({verified: false, status: 0, message: "Internal server error! Please try again later."});
+                    throw err;
+                }
+                else {
+                    if (result.length > 0) {
+                        res.status(200).send({verified:true, status:1, message:"Client verified!"});
+                    }
+                    else {
+                        res.status(400).send({verified:false, status:0, message:"Token does not exist!"});
+                    }
+                }
+            });
+        }
+    });
 });
 
 app.listen(3000, function() {
