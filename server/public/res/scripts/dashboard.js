@@ -20,6 +20,8 @@ var addexpense_add_button = document.getElementById("addexpense_add_button");
 var addexpense_cancel_button = document.getElementById("addexpense_cancel_button");
 var addexpense_error = document.getElementById("addexpense_error");
 
+var delexpense_error = document.getElementById("delexpense_error");
+
 addbalance_button.onclick = function() {
     addbalance_form.style = "display: block;";
     addexpense_form.style = "display: none;";
@@ -144,9 +146,11 @@ function populateExpense (expenses) {
     <th>Title</th>\
     <th>Description</th>\
     <th>Amount</th>\
+    <th>Delete</th>\
     </tr>";
 
     expenses.forEach(element => {
+        console.log(element);
         let tr = document.createElement("tr");
         let td = document.createElement("td");
         td.innerHTML = element.timestamp;
@@ -162,6 +166,33 @@ function populateExpense (expenses) {
 
         td = document.createElement("td");
         td.innerHTML = element.amount;
+        tr.appendChild(td);
+
+        td = document.createElement("td");
+        let delButton = document.createElement("button");
+        delButton.innerHTML = "Delete";
+        delButton.setAttribute("data-expenseid", String(element.id));
+        delButton.addEventListener("click", (ev) => {
+            let delExpenseReq = new XMLHttpRequest();
+            let token = token_cookie.value;
+            let id = ev.target.getAttribute("data-expenseid");
+
+            delExpenseReq.open("POST", "delexpense");
+            delExpenseReq.addEventListener("load", (ev)=>{
+                let response = ev.target.response;
+                if (response.status == 1) {
+                    delexpense_error.innerHTML = "Expense deleted successfully!";
+                    populateExpense(response.expenses);
+                }
+                else {
+                    delexpense_error.innerHTML = response.message;
+                }
+            });
+            delExpenseReq.responseType = "json";
+            delExpenseReq.setRequestHeader("Content-Type", "application/json");
+            delExpenseReq.send(JSON.stringify({token: token, id: id}));
+        });
+        td.appendChild(delButton);
         tr.appendChild(td);
 
         expenses_table.appendChild(tr);

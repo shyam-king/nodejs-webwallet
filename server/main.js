@@ -50,15 +50,7 @@ app.post("/getdata", (req,res)=>{
                     throw err;
                 }
                 else {
-                    result.forEach((value) => {
-                        ret.expenses.push({
-                            title: value.title,
-                            description: value.description,
-                            amount: value.amount,
-                            timestamp: value.timestamp
-                        });
-                    });
-
+                    ret.expenses = result;
                     res.status(200).send(ret);
                 }
             });
@@ -98,7 +90,7 @@ app.post("/addexpense", (req,res)=>{
         }
         else {
             let ret = {status:1};
-            q = "SELECT title, timestamp, description, amount FROM expenses where username = (select username from";
+            q = "SELECT * FROM expenses where username = (select username from";
             q += " authentication_tokens where token = " + token + ") ORDER BY timestamp desc;";
             sqlConnection.query(q, (err,result)=>{
                 if (err) {
@@ -116,6 +108,33 @@ app.post("/addexpense", (req,res)=>{
         }
     });
 }); 
+
+app.post("/delexpense", (req, res)=>{
+    let id = req.body.id;
+    let token = req.body.token;
+
+    let q = "DELETE FROM expenses WHERE id = " + id + " AND username = (SELECT username FROM authentication_tokens WHERE token = " + token + " );";
+    sqlConnection.query(q, (err, result)=>{
+        if(err) {
+            res.status(500).send({status:0, message:"Internal server error, please try again later."});
+            throw err;
+        }
+        else {
+            let ret = {status:1};
+            q = "SELECT * FROM expenses WHERE username = (SELECT username FROM authentication_tokens WHERE token = " + token + " );";
+            sqlConnection.query(q, (err,result) => {
+                if (err) {
+                    res.status(500).send("Expenses deleted but could not fetch updated records.");
+                    throw err;
+                }
+                else {
+                    ret.expenses = result;
+                    res.status(200).send(ret);
+                }
+            });
+        }
+    });
+});
 
 app.post("/createacc", function(req,res){
     if (checkSafePassword(req.body.password).length == 0 && checkSafeUsername(req.body.username).length == 0) {
