@@ -285,3 +285,13 @@ div.card {
     margin: 2px, 4px;
     list-style-type: circle;
 }
+
+.content textarea {
+    background: none;
+    font-family: inherit;
+    font-weight: 100;
+    color: white;
+    border: 1px;
+    border-style: solid;
+    border-color: white;
+}

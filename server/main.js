@@ -39,7 +39,6 @@ app.post("/getdata", (req,res)=>{
             throw err;
         }
         else {
-            console.log(result);
             ret.status = 1;
             ret.username = result[0].username;
             ret.balance = result[0].balance;
@@ -63,6 +62,22 @@ app.post("/getdata", (req,res)=>{
                     res.status(200).send(ret);
                 }
             });
+        }
+    });
+});
+
+app.post("/addbalance", (req, res)=>{
+    let token = req.body.token;
+    let amount = req.body.amount;
+
+    let q = "UPDATE users SET balance=balance + " + amount + " WHERE username = (SELECT username FROM authentication_tokens where token = " + token + ");";
+    sqlConnection.query(q, (err, result) => {
+        if (err) {
+            res.status(500).send({status: 0, message: "Internal server error, please try again later."});
+            throw err;
+        }
+        else {
+            res.status(200).send({status:1, message: "Balance incremented successfully!"});
         }
     });
 });
