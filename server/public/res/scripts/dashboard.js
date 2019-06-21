@@ -1,6 +1,7 @@
 var token_cookie = Cookie.getCookie("token");
 var username = "", balance = 0, expenses = [];
 var expenses_table = document.getElementById("expenses_table");
+var logout_button = document.getElementById("logout_button");
 
 var addbalance_button = document.getElementById("addbalance_button");
 var addexpense_button = document.getElementById("addexpense_button");
@@ -60,39 +61,91 @@ addbalance_add_button.onclick = () => {
     addbalance_req.send(JSON.stringify({token: token_cookie.value, amount: addbalance_amount.value}));
 };
 
-tokenValidity(token_cookie.value, function(verified) {
-    if (verified == false) {
-        window.location = "login";
-    } 
-    else {
-        //fetch data
-        var fetchData = new XMLHttpRequest();
-        
-        fetchData.open("POST", "getdata");
-        fetchData.addEventListener("load", (ev)=>{
-            response = fetchData.response;
+logout_button.onclick = () => {
+    let c = new Cookie("token", "");
+    Cookie.setCookie(c);
+    window.location = "index.html";
+};
 
-            if (response.status == 1) {
-                username = response.username;
-                balance = response.balance;
-                expenses = response.expenses;
+addexpense_add_button.onclick = () => {
+    let title = addexpense_title.value;
+    let desc = addexpense_description.value;
+    
+    let amount = addexpense_amount.value;
 
-                document.getElementById("userinfo").innerHTML = "User: " + username;
-                document.getElementById("balance").innerHTML =  "Balance: Rs " + balance;
-
-                populateExpense(expenses);
-            }
-            else {
-                document.getElementById("errormsg").innerHTML = response.message;
-            }
-        });
-        fetchData.responseType = "json";
-        fetchData.setRequestHeader("Content-Type", "application/json");
-        fetchData.send(JSON.stringify({token: token_cookie.value}));
+    if (amount > balance) {
+        addexpense_error.innerHTML = "Insufficent balance!";
+        return;
     }
-});
+
+    let addexpense_req = new XMLHttpRequest();
+    addexpense_req.open("POST", "addexpense");
+    
+    addexpense_req.addEventListener("load", (ev)=>{
+        let response = addexpense_req.response;
+        if (response.status == 1) {
+            addexpense_title.value = "";
+            addexpense_amount.value = "";
+            addexpense_description.value = "";
+            addexpense_error.innerHTML = "Expense added successfully";
+
+            populateExpense(response.expenses);
+
+            balance -= amount;
+            balance = Math.round(balance * 100) / 100;
+            document.getElementById("balance").innerHTML = "Balance: Rs " + balance;
+        }
+        else {
+            addexpense_error.innerHTML = response.message;
+        }
+    });
+
+    addexpense_req.responseType = "json";
+    addexpense_req.setRequestHeader("Content-Type", "application/json");
+    addexpense_req.send(JSON.stringify({token: token_cookie.value, title: title, description: desc, amount: amount}));
+};  
+
+if (token_cookie != null)
+    tokenValidity(token_cookie.value, function(verified) {
+        if (verified == false) {
+            window.location = "index.html";
+        } 
+        else {
+            //fetch data
+            var fetchData = new XMLHttpRequest();
+            
+            fetchData.open("POST", "getdata");
+            fetchData.addEventListener("load", (ev)=>{
+                response = fetchData.response;
+
+                if (response.status == 1) {
+                    username = response.username;
+                    balance = response.balance;
+                    expenses = response.expenses;
+
+                    document.getElementById("userinfo").innerHTML = "User: " + username;
+                    document.getElementById("balance").innerHTML =  "Balance: Rs " + balance;
+
+                    populateExpense(expenses);
+                }
+                else {
+                    document.getElementById("errormsg").innerHTML = response.message;
+                }
+            });
+            fetchData.responseType = "json";
+            fetchData.setRequestHeader("Content-Type", "application/json");
+            fetchData.send(JSON.stringify({token: token_cookie.value}));
+        }
+    });
 
 function populateExpense (expenses) {
+    expenses_table.innerHTML = "<tr>\
+    <th>Time stamp</th>\
+    <th>Title</th>\
+    <th>Description</th>\
+    <th>Amount</th>\
+    </tr>";
+
     expenses.forEach(element => {
         let tr = document.createElement("tr");
         let td = document.createElement("td");

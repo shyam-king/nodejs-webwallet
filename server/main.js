@@ -43,7 +43,7 @@ app.post("/getdata", (req,res)=>{
             ret.username = result[0].username;
             ret.balance = result[0].balance;
             ret.expenses = [];
-            q = "SELECT * FROM expenses WHERE username=\"" + ret.username + "\";";
+            q = "SELECT * FROM expenses WHERE username=\"" + ret.username + "\" ORDER BY timestamp desc;";
             sqlConnection.query(q, (err, result) => {
                 if (err) {
                     res.status(500).send({status:0, message:"Internal server error!"});
@@ -81,6 +81,41 @@ app.post("/addbalance", (req, res)=>{
         }
     });
 });
+
+app.post("/addexpense", (req,res)=>{
+    let token = req.body.token;
+    let title = req.body.title;
+    let desc = req.body.description;
+    let amount = req.body.amount;
+
+    q = "INSERT INTO expenses(username, title, description, amount) values (( select username from authentication_tokens";
+    q += " where token = " + token + "), \"" + title + "\", \"" + desc + "\", " + amount + ");";
+
+    sqlConnection.query(q, (err)=>{
+        if (err) {
+            res.status(500).send({status:0, message:"Internal server error, please try again later."});
+            throw err;
+        }
+        else {
+            let ret = {status:1};
+            q = "SELECT title, timestamp, description, amount FROM expenses where username = (select username from";
+            q += " authentication_tokens where token = " + token + ") ORDER BY timestamp desc;";
+            sqlConnection.query(q, (err,result)=>{
+                if (err) {
+                    res.status(500).send({status:0, message:"Internal server error, please try again later!"});
+                    throw err;
+                }
+                else {
+                    ret.expenses = result;
+                    res.status(200).send(ret);
+
+                    q = "UPDATE users SET balance = balance - " + amount + " WHERE username = (SELECT username from authentication_tokens where token = " + token + ");";
+                    sqlConnection.query(q);
+                }
+            })
+        }
+    });
+}); 
 
 app.post("/createacc", function(req,res){
     if (checkSafePassword(req.body.password).length == 0 && checkSafeUsername(req.body.username).length == 0) {

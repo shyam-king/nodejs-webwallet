@@ -38,6 +38,8 @@ class Cookie {
         cookie.name = name;
         cookie.value = value;
 
+        if (cookie.value == '')
+            return null;
         return cookie;
     }
 
