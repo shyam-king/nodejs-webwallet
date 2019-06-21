@@ -29,6 +29,23 @@ app.get("/", function(req, res){
     res.sendFile(path.join(__dirname, "public/index.html"));
 }); 
 
+app.post("/getdata/username", (req,res)=>{
+    let token = req.body.token;
+    let q = "SELECT username FROM authentication_tokens WHERE token = " + token + ";";
+
+    sqlConnection.query(q, (err,result)=>{
+        if (err) {
+            res.status(500).send({message:"Internal server error!", status:0});
+            throw err;
+        }
+        else {
+            let ret = {status:1};
+            ret.username = result[0].username;
+            res.status(200).send(ret);
+        }
+    });
+})
+
 app.post("/getdata", (req,res)=>{
     let q;
     q = "SELECT users.username,balance FROM authentication_tokens,users WHERE token=" + req.body.token+ " AND users.username = authentication_tokens.username;";

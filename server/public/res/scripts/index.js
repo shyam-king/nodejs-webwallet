@@ -114,6 +114,7 @@ function createAccount() {
 }
 
 var token_c = Cookie.getCookie("token");
+console.log(token_c);
 if (token_c != null)
 tokenValidity(token_c.value, function(verified){
     if (verified == true)

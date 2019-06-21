@@ -1,0 +1,43 @@
+<html>
+    <body>
+        <button id="addbill_button">Create a new bill</button>
+        <div id="newbill_form">
+            <label>Enter bill title: </label>
+            <input type="text" id="newbill_title" /><br>
+            <label>Enter participant: </label>
+            <input type="text" id="newbill_participant" />
+            <button id="newbill_addparticipant_button">Add</button> <br>
+            <label>Add payment:</label><br>
+            <p style="padding-left: 10%;">
+            <label>Amount: </label>
+            <input type="text" id="newbill_amount"/><br>
+            <label>Paid by: </label>
+            <input type="text" id="newbill_paidby" /><br>
+            <button id="newbill_addpayment_button">Add</button>
+            </p>
+            <label>Participants:</label>
+            <ul id="newbill_participant_list">
+                <li>None</li>
+            </ul>
+            <label>Payments: </label><br>
+            <ul id="newbill_payment_list">
+                <li>None</li>
+            </ul>
+        </div>
+        <div id="editbill_form" style="display:none">
+        </div>
+        <div>
+            <h4>Open bills:</h4>
+            <table id="openbills_table">
+            </table>
+        </div>
+        <div>
+            <h4>Closed bills:</h4>
+            <table id="closedbills_table">
+            </table>
+        </div>
+
+        <script src="res/scripts/common.js"></script>
+        <script src="res/scripts/bills.js"></script>
+    </body>
+</html></html>

@@ -22,6 +22,11 @@ var addexpense_error = document.getElementById("addexpense_error");
 
 var delexpense_error = document.getElementById("delexpense_error");
 
+var splitbills_button = document.getElementById("splitbills_button");
+splitbills_button.onclick = () => {
+    document.location = "bills.html";
+};
+
 addbalance_button.onclick = function() {
     addbalance_form.style = "display: block;";
     addexpense_form.style = "display: none;";

@@ -21,7 +21,10 @@ class Cookie {
 
     static getCookie(name) {
         var x = document.cookie;
-        let cookiePosition = x.indexOf(name);
+        let cookiePosition = - name.length;
+        do{
+            cookiePosition = x.indexOf(name, cookiePosition + name.length);
+        } while (x.charAt(cookiePosition+name.length) != "=" && cookiePosition >= 0);
         if (cookiePosition < 0) {
             return null;
         }
