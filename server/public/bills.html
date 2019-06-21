@@ -1,7 +1,7 @@
 <html>
     <body>
         <button id="addbill_button">Create a new bill</button>
-        <div id="newbill_form">
+        <div id="newbill_form" style="display:none;">
             <label>Enter bill title: </label>
             <input type="text" id="newbill_title" /><br>
             <label>Enter participant: </label>
@@ -9,20 +9,24 @@
             <button id="newbill_addparticipant_button">Add</button> <br>
             <label>Add payment:</label><br>
             <p style="padding-left: 10%;">
+            <label>Title:</label>
+            <input type="text" id="newbill_payment_title" /><br>
             <label>Amount: </label>
-            <input type="text" id="newbill_amount"/><br>
+            <input type="number" step="0.01" id="newbill_amount"/><br>
             <label>Paid by: </label>
             <input type="text" id="newbill_paidby" /><br>
             <button id="newbill_addpayment_button">Add</button>
             </p>
             <label>Participants:</label>
-            <ul id="newbill_participant_list">
+            <ul id="newbill_participants_list">
                 <li>None</li>
             </ul>
             <label>Payments: </label><br>
-            <ul id="newbill_payment_list">
+            <ul id="newbill_payments_list">
                 <li>None</li>
             </ul>
+            <button id="newbill_submit_button">Save</button>
+            <button id="newbill_cancel_button">Cancel</button>
         </div>
         <div id="editbill_form" style="display:none">
         </div>

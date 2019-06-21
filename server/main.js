@@ -240,7 +240,6 @@ app.post("/login", (req,res)=>{
                                         throw err;
                                     }
                                     else {
-                                        console.log(result);
                                         res.status(200).send({status:1, message:"Login successful!", token:result.insertId});
                                     }
                                 });
@@ -282,6 +281,29 @@ app.post("/verifytoken", (req,res)=>{
             });
         }
     });
+});
+
+app.post("/checkusername", (req,res)=>{
+    let username = req.body.username;
+    let q = "SELECT * from users WHERE username = \"" + username + "\";";
+
+    sqlConnection.query(q, (err, result)=>{
+        if (err) {
+            res.status(500).send({status:0, message:"Internal server error!"});
+            throw err;
+        }
+        else {
+            let ret = {status:1};
+            if (result.length > 0) {
+                ret.verified = true;
+            } 
+            else {
+                ret.verified = false;
+            }
+
+            res.status(200).send(ret);
+        }
+    })
 });
 
 app.listen(3000, function() {
