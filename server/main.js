@@ -129,28 +129,39 @@ app.post("/addexpense", (req,res)=>{
 app.post("/delexpense", (req, res)=>{
     let id = req.body.id;
     let token = req.body.token;
-
-    let q = "DELETE FROM expenses WHERE id = " + id + " AND username = (SELECT username FROM authentication_tokens WHERE token = " + token + " );";
-    sqlConnection.query(q, (err, result)=>{
-        if(err) {
-            res.status(500).send({status:0, message:"Internal server error, please try again later."});
+    let ret = {status:1, amount: 0};
+    let q = "SELECT amount FROM expenses WHERE id = " + id + " AND username = (SELECT username FROM authentication_tokens WHERE token = " + token + " );";
+    sqlConnection.query(q, (err,result)=>{
+        if (err) {
+            res.status(500).send({status:0, message: "Internal server error! Please try again later!"});
             throw err;
         }
         else {
-            let ret = {status:1};
-            q = "SELECT * FROM expenses WHERE username = (SELECT username FROM authentication_tokens WHERE token = " + token + " );";
-            sqlConnection.query(q, (err,result) => {
-                if (err) {
-                    res.status(500).send("Expenses deleted but could not fetch updated records.");
+            ret.amount = result[0].amount;
+            q = "DELETE FROM expenses WHERE id = " + id + " AND username = (SELECT username FROM authentication_tokens WHERE token = " + token + " );";
+            sqlConnection.query(q, (err, result)=>{
+                if(err) {
+                    res.status(500).send({status:0, message:"Internal server error, please try again later."});
                     throw err;
                 }
                 else {
-                    ret.expenses = result;
-                    res.status(200).send(ret);
+                    q = "SELECT * FROM expenses WHERE username = (SELECT username FROM authentication_tokens WHERE token = " + token + " );";
+                    sqlConnection.query(q, (err,result) => {
+                        if (err) {
+                            res.status(500).send("Expenses deleted but could not fetch updated records.");
+                            throw err;
+                        }
+                        else {
+                            ret.expenses = result;
+                            res.status(200).send(ret);
+                        }
+                    });
                 }
             });
         }
     });
+
+    
 });
 
 app.post("/createacc", function(req,res){

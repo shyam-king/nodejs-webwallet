@@ -188,6 +188,8 @@ function populateExpense (expenses) {
                 if (response.status == 1) {
                     delexpense_error.innerHTML = "Expense deleted successfully!";
                     populateExpense(response.expenses);
+                    balance += response.amount;
+                    document.getElementById("balance").innerHTML = "Balance: Rs " + balance;
                 }
                 else {
                     delexpense_error.innerHTML = response.message;
