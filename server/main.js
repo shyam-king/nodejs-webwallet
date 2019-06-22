@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const mysql = require("mysql");
 const crypto = require("crypto");
+const syncSql = require("sync-mysql");
 
 var app = express();
 app.use(express.json());
@@ -199,6 +200,66 @@ app.post("/createacc", function(req,res){
     }
     else {
         res.status(401).send({message: "Bad request!"});
+    }
+});
+
+app.post("/createbill", (req,res)=>{
+    let bill = req.body.bill;
+    let token = req.body.token;
+    let ret = {status: 0, message: ""};
+    let status = 200;
+    let username = "";
+    let sql = new syncSql({
+        user:"spider",
+        password:"spider",
+        host:"localhost"
+    });
+
+    try {
+        //fetch username
+        sql.query("USE spiderInductions;");
+        username = sql.query("SELECT username from authentication_tokens WHERE token = " + token + ";")[0].username;
+        
+        //fetch and update billid
+        bill.id = Number(sql.query("SELECT value FROM common WHERE id='bills';")[0].value);
+        sql.query("UPDATE common SET value = '" + (bill.id+1) + "' WHERE id = 'bills';");
+    
+        //parse bill object and populate bills
+        //set owner
+        sql.query("INSERT INTO bills (id, content_type, content) VALUES (" + bill.id + ", 'own', '" + username + "');");
+        //set participants
+        bill.participants.forEach((value, index)=>{
+            sql.query("INSERT INTO bills (id, content_index, content_type, content) VALUES (" + bill.id +
+            ", " + index + ", 'par', '" + value + "');");
+        });
+        //set title
+        sql.query("INSERT INTO bills (id, content_type, content) VALUES (" + bill.id + ", 't', '" + bill.title + "');");
+        //set purchases
+        bill.purchases.forEach((value, index)=>{
+            //title
+            sql.query("INSERT INTO bills (id, content_index, content_type, content) VALUES (" +
+            bill.id + "," + index +", 'purt', '" + value.title +
+            "');");
+            //paidby
+            sql.query("INSERT INTO bills (id, content_index, content_type, content) VALUES("+
+            bill.id + ", " + index + ", 'purp', '" + value.paidby + "'" + 
+            ");");
+            //amount
+            sql.query("INSERT INTO bills (id, content_index, content_type, content) VALUES("+
+            bill.id + ", " + index + ", 'pura', '" + value.amount + "'" + 
+            ");");
+        });
+
+        ret.status = 1;
+        ret.message = "Bill added successfully!";
+    }
+    catch (err) {
+        console.log(err);
+        status =  500;
+        ret = {status:0, message: "Internal server error!"};
+    }
+    finally {
+        res.status(status).send(ret);
     }
 });
 
